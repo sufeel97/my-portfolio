@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portfolio | 김흥식</title>
+  <meta name="description" content="김흥식의 모던 포트폴리오 웹사이트">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a href="#top" class="logo" aria-label="홈으로 이동">Doit<span>.</span></a>
+      <nav class="nav" aria-label="주 메뉴">
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="메뉴 열기">
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+        </button>
+        <ul id="nav-list" class="nav-list">
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-background" role="img" aria-label="히어로 배경 이미지">
+      <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2400&auto=format&fit=crop" alt="웹 개발자 작업 환경 - 코드 편집기와 노트북">
+    </div>
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <h1 class="hero-title">안녕하세요, 저는 <span>김흥식</span>입니다.</h1>
+        <p class="hero-subtitle">프론트엔드 중심의 풀스택 개발자로, 문제를 단순하게 만들고 사용자 경험을 정교하게 다듬는 일을 좋아합니다.</p>
+        <div class="hero-cta">
+          <a class="btn primary" href="#projects">프로젝트 보기</a>
+          <a class="btn ghost" href="#contact">연락하기</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section class="section" id="projects">
+    <div class="container">
+      <div class="section-head">
+        <h2>Selected Projects</h2>
+        <p>최근에 작업한 프로젝트 일부입니다.</p>
+      </div>
+
+      <div class="projects-grid">
+        <!-- Card 1 -->
+        <article class="card reveal">
+          <div class="card-media">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop" alt="대시보드 데이터 시각화 이미지">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Realtime Dashboard</h3>
+            <p class="card-text">WebSocket 기반의 실시간 데이터 시각화 대시보드. 성능 최적화와 반응형 레이아웃을 적용했습니다.</p>
+            <div class="card-actions">
+              <a class="btn small" href="#" aria-label="프로젝트 데모 열기">Live</a>
+              <a class="btn small ghost" href="#" aria-label="GitHub 리포지토리 열기">Code</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="card reveal">
+          <div class="card-media">
+            <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?q=80&w=1200&auto=format&fit=crop" alt="전자상거래 웹사이트 인터페이스">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">E-commerce SPA</h3>
+            <p class="card-text">장바구니, 결제 흐름, 접근성 준수까지 고려한 전자상거래 싱글페이지 애플리케이션.</p>
+            <div class="card-actions">
+              <a class="btn small" href="#">Live</a>
+              <a class="btn small ghost" href="#">Code</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="card reveal">
+          <div class="card-media">
+            <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1200&auto=format&fit=crop" alt="UI 디자인 시스템 컴포넌트">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Design System</h3>
+            <p class="card-text">토큰 기반의 디자인 시스템과 컴포넌트 라이브러리. 문서화와 테스트 자동화를 포함합니다.</p>
+            <div class="card-actions">
+              <a class="btn small" href="#">Docs</a>
+              <a class="btn small ghost" href="#">Code</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="section alt" id="about">
+    <div class="container">
+      <div class="section-head">
+        <h2>About</h2>
+        <p>사용자 중심의 경험을 만들기 위해 성능, 접근성, 유지보수성을 중요하게 생각합니다.</p>
+      </div>
+      <div class="about-cols">
+        <div class="about-col">
+          <h3>Skills</h3>
+          <ul class="tags">
+            <li>HTML5</li>
+            <li>CSS3</li>
+            <li>JavaScript</li>
+            <li>TypeScript</li>
+            <li>React</li>
+            <li>Node.js</li>
+            <li>Performance</li>
+            <li>A11y</li>
+          </ul>
+        </div>
+        <div class="about-col">
+          <h3>Values</h3>
+          <p>단순함, 일관성, 그리고 명확한 커뮤니케이션. 팀과 사용자 모두에게 좋은 결과를 만드는 것을 목표로 합니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="section alt" id="contact">
+    <div class="container">
+      <div class="section-head">
+        <h2>Contact</h2>
+        <p>프로젝트나 협업 관련 문의를 남겨주세요.</p>
+      </div>
+      <form id="contactForm" class="contact-form" novalidate>
+        <div class="form-row">
+          <label for="name">이름</label>
+          <input type="text" id="name" name="name" placeholder="이름을 입력하세요" required>
+          <span class="error" id="error-name" aria-live="polite"></span>
+        </div>
+        <div class="form-row">
+          <label for="email">이메일</label>
+          <input type="email" id="email" name="email" placeholder="example@email.com" required>
+          <span class="error" id="error-email" aria-live="polite"></span>
+        </div>
+        <div class="form-row">
+          <label for="message">메시지</label>
+          <textarea id="message" name="message" rows="5" placeholder="하고 싶은 말을 자유롭게 남겨주세요" required></textarea>
+          <span class="error" id="error-message" aria-live="polite"></span>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn primary">메시지 보내기</button>
+          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> 김흥식. All rights reserved.</p>
+      <a href="#top" class="to-top" aria-label="상단으로 이동">↑ Top</a>
+    </div>
+  </footer>
+
+  <script src="./script.js"></script>
+</body>
+</html>
+
+
