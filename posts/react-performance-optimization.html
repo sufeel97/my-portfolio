@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>React 성능 최적화: 실무에서 바로 적용하는 9가지 팁 | Hector의 블로그</title>
+    <meta name="description" content="실제 프로젝트에서 React 애플리케이션의 성능을 개선하면서 배운 실용적인 최적화 기법들">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+    <!-- Header / Navigation -->
+    <header class="site-header" id="top">
+        <div class="container header-inner">
+            <a href="../index.html#top" class="logo" aria-label="홈으로 이동">Doit<span>.</span></a>
+            <nav class="nav" aria-label="주 메뉴">
+                <button class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="메뉴 열기">
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                </button>
+                <ul id="nav-list" class="nav-list">
+                    <li><a href="../index.html#home">Home</a></li>
+                    <li><a href="../index.html#categories">Categories</a></li>
+                    <li><a href="../index.html#about">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Post Content -->
+    <article class="post-detail">
+        <div class="container">
+            <div class="post-detail-header">
+                <span class="post-category">Frontend</span>
+                <h1>React 성능 최적화: 실무에서 바로 적용하는 9가지 팁</h1>
+                <div class="post-meta">
+                    <span>📅 2025년 12월 20일</span>
+                    <span>⏱ 8분</span>
+                    <span>💬 24</span>
+                </div>
+            </div>
+
+            <div class="post-detail-image">
+                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop"
+                    alt="웹 개발 작업 환경">
+            </div>
+
+            <div class="post-detail-content">
+                <div class="post-body">
+                    <p class="lead">실제 프로젝트에서 React 애플리케이션의 성능을 개선하면서 배운 실용적인 최적화 기법들을 공유합니다. 메모이제이션부터 코드 스플리팅까지 단계별로
+                        알아봅니다.</p>
+
+                    <h2>1. React.memo로 불필요한 리렌더링 방지</h2>
+                    <p>컴포넌트가 동일한 props를 받을 때 리렌더링을 방지하는 가장 간단한 방법입니다. 특히 리스트 아이템이나 복잡한 컴포넌트에서 효과적입니다.</p>
+
+                    <pre><code>const MemoizedComponent = React.memo(({ data }) => {
+  return &lt;div&gt;{data.title}&lt;/div&gt;;
+});
+
+// 또는 비교 함수 커스터마이징
+const MemoizedComponent = React.memo(
+  ({ data }) => &lt;div&gt;{data.title}&lt;/div&gt;,
+  (prevProps, nextProps) => prevProps.data.id === nextProps.data.id
+);</code></pre>
+
+                    <h2>2. useMemo로 비싼 계산 캐싱</h2>
+                    <p>복잡한 계산이나 필터링, 정렬 작업의 결과를 메모이제이션하여 매 렌더링마다 재계산하는 것을 방지합니다.</p>
+
+                    <pre><code>const sortedData = useMemo(() => {
+  return data.sort((a, b) => a.value - b.value);
+}, [data]);
+
+const filteredList = useMemo(() => {
+  return items.filter(item => item.category === selectedCategory);
+}, [items, selectedCategory]);</code></pre>
+
+                    <h2>3. useCallback으로 함수 재생성 방지</h2>
+                    <p>자식 컴포넌트에 콜백 함수를 전달할 때 useCallback을 사용하면 함수의 재생성을 방지하여 불필요한 리렌더링을 막을 수 있습니다.</p>
+
+                    <pre><code>const handleClick = useCallback((id) => {
+  setSelectedId(id);
+}, []);
+
+const handleSubmit = useCallback((formData) => {
+  // API 호출 등
+  submitData(formData);
+}, [submitData]);</code></pre>
+
+                    <h2>4. 코드 스플리팅과 Lazy Loading</h2>
+                    <p>React.lazy와 Suspense를 사용하여 필요한 시점에 컴포넌트를 로드하면 초기 번들 크기를 줄일 수 있습니다.</p>
+
+                    <pre><code>const HeavyComponent = lazy(() => import('./HeavyComponent'));
+
+function App() {
+  return (
+    &lt;Suspense fallback={&lt;div&gt;Loading...&lt;/div&gt;}&gt;
+      &lt;HeavyComponent /&gt;
+    &lt;/Suspense&gt;
+  );
+}</code></pre>
+
+                    <h2>5. 가상화로 긴 리스트 최적화</h2>
+                    <p>react-window나 react-virtualized를 사용하여 화면에 보이는 항목만 렌더링합니다.</p>
+
+                    <pre><code>import { FixedSizeList } from 'react-window';
+
+const VirtualizedList = ({ items }) => (
+  &lt;FixedSizeList
+    height={600}
+    itemCount={items.length}
+    itemSize={50}
+    width="100%"
+  &gt;
+    {({ index, style }) => (
+      &lt;div style={style}&gt;{items[index].name}&lt;/div&gt;
+    )}
+  &lt;/FixedSizeList&gt;
+);</code></pre>
+
+                    <h2>6. 디바운싱과 쓰로틀링</h2>
+                    <p>검색 입력이나 스크롤 이벤트 등 빈번하게 발생하는 이벤트를 최적화합니다.</p>
+
+                    <pre><code>import { debounce } from 'lodash';
+
+const handleSearch = useCallback(
+  debounce((searchTerm) => {
+    fetchSearchResults(searchTerm);
+  }, 300),
+  []
+);</code></pre>
+
+                    <h2>7. 상태 관리 최적화</h2>
+                    <p>전역 상태를 작은 단위로 분리하고, Context API 사용 시 Provider를 분리하여 불필요한 리렌더링을 방지합니다.</p>
+
+                    <pre><code>// 좋은 예: 상태 분리
+const ThemeContext = createContext();
+const UserContext = createContext();
+
+// 각각의 Context를 필요한 곳에서만 사용</code></pre>
+
+                    <h2>8. 이미지 최적화</h2>
+                    <p>이미지 lazy loading과 적절한 포맷 사용, 그리고 responsive 이미지를 활용합니다.</p>
+
+                    <pre><code>&lt;img 
+  src="image.webp" 
+  loading="lazy"
+  srcSet="image-small.webp 400w, image-large.webp 800w"
+  sizes="(max-width: 600px) 400px, 800px"
+  alt="설명"
+/&gt;</code></pre>
+
+                    <h2>9. Production 빌드 확인</h2>
+                    <p>개발 환경과 프로덕션 환경의 성능 차이가 크므로 항상 프로덕션 빌드로 테스트합니다.</p>
+
+                    <pre><code># 프로덕션 빌드
+npm run build
+
+# 번들 분석
+npm run build -- --stats
+npx webpack-bundle-analyzer build/bundle-stats.json</code></pre>
+
+                    <h2>결론</h2>
+                    <p>성능 최적화는 측정부터 시작해야 합니다. React DevTools Profiler를 사용하여 병목 지점을 찾고, 위의 기법들을 선택적으로 적용하세요. 모든 컴포넌트를
+                        최적화할 필요는 없으며, 실제로 성능 문제가 있는 부분에 집중하는 것이 중요합니다.</p>
+
+                    <p>측정 없는 최적화는 시간 낭비일 수 있습니다. 항상 Before/After를 비교하며 개선하세요!</p>
+                </div>
+
+                <div class="post-tags">
+                    <span class="tag">React</span>
+                    <span class="tag">성능최적화</span>
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">프론트엔드</span>
+                </div>
+
+                <div class="post-share">
+                    <h3>이 글을 공유하세요</h3>
+                    <div class="share-buttons">
+                        <a href="#" class="share-btn">Twitter</a>
+                        <a href="#" class="share-btn">Facebook</a>
+                        <a href="#" class="share-btn">LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Posts -->
+        <div class="related-posts">
+            <div class="container">
+                <h2>관련 글</h2>
+                <div class="related-posts-grid">
+                    <article class="post-card">
+                        <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1200&auto=format&fit=crop"
+                            alt="리액트 코드">
+                        <div class="post-card-content">
+                            <span class="post-category">Frontend</span>
+                            <h3><a href="typescript-generics-guide.html">TypeScript 제네릭 완벽 가이드</a></h3>
+                            <p class="post-excerpt">
+                                TypeScript의 제네릭을 활용하여 타입 안정성을 유지하면서도 재사용 가능한 컴포넌트를 만드는 방법을 알아봅니다.
+                            </p>
+                            <div class="post-meta">
+                                <span>📅 2025.12.18</span>
+                                <span>⏱ 6분</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="post-card">
+                        <img src="https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?q=80&w=1200&auto=format&fit=crop"
+                            alt="자바스크립트 코드">
+                        <div class="post-card-content">
+                            <span class="post-category">JavaScript</span>
+                            <h3><a href="promise-async-await.html">Promise와 Async/Await 깊이 이해하기</a></h3>
+                            <p class="post-excerpt">
+                                비동기 프로그래밍의 핵심 개념인 Promise와 async/await의 동작 원리를 이벤트 루프와 함께 알아봅니다.
+                            </p>
+                            <div class="post-meta">
+                                <span>📅 2025.12.12</span>
+                                <span>⏱ 7분</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="post-card">
+                        <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1200&auto=format&fit=crop"
+                            alt="서버 코드">
+                        <div class="post-card-content">
+                            <span class="post-category">Backend</span>
+                            <h3><a href="nodejs-performance-monitoring.html">Node.js 성능 모니터링과 최적화</a></h3>
+                            <p class="post-excerpt">
+                                프로덕션 환경에서 Node.js 애플리케이션의 성능을 모니터링하고 병목 지점을 찾아 개선하는 방법을 다룹니다.
+                            </p>
+                            <div class="post-meta">
+                                <span>📅 2025.12.10</span>
+                                <span>⏱ 9분</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>© <span id="year"></span> Hector. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#" aria-label="GitHub">GitHub</a>
+                <a href="#" aria-label="Twitter">Twitter</a>
+                <a href="#" aria-label="LinkedIn">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+</body>
+
+</html>

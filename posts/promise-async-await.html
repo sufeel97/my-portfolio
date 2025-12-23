@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Promise와 Async/Await 깊이 이해하기 | Hector의 블로그</title>
+    <meta name="description" content="비동기 프로그래밍의 핵심 개념인 Promise와 async/await의 동작 원리를 이벤트 루프와 함께 알아봅니다">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+    <header class="site-header" id="top">
+        <div class="container header-inner">
+            <a href="../index.html#top" class="logo" aria-label="홈으로 이동">Doit<span>.</span></a>
+            <nav class="nav" aria-label="주 메뉴">
+                <button class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="메뉴 열기">
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                </button>
+                <ul id="nav-list" class="nav-list">
+                    <li><a href="../index.html#home">Home</a></li>
+                    <li><a href="../index.html#categories">Categories</a></li>
+                    <li><a href="../index.html#about">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <article class="post-detail">
+        <div class="container">
+            <div class="post-detail-header">
+                <span class="post-category">JavaScript</span>
+                <h1>Promise와 Async/Await 깊이 이해하기</h1>
+                <div class="post-meta">
+                    <span>📅 2025년 12월 12일</span>
+                    <span>⏱ 7분</span>
+                    <span>💬 15</span>
+                </div>
+            </div>
+
+            <div class="post-detail-image">
+                <img src="https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?q=80&w=1200&auto=format&fit=crop"
+                    alt="자바스크립트 코드">
+            </div>
+
+            <div class="post-detail-content">
+                <div class="post-body">
+                    <p class="lead">비동기 프로그래밍의 핵심 개념인 Promise와 async/await의 동작 원리를 이벤트 루프와 함께 알아봅니다.</p>
+
+                    <h2>비동기 프로그래밍이란?</h2>
+                    <p>JavaScript는 싱글 스레드 언어지만, 비동기 프로그래밍을 통해 여러 작업을 효율적으로 처리할 수 있습니다. 이는 이벤트 루프와 콜백 큐를 통해 구현됩니다.</p>
+
+                    <h2>콜백 지옥 (Callback Hell)</h2>
+                    <p>Promise가 등장하기 전에는 콜백 함수를 중첩해서 사용했고, 이는 코드를 읽기 어렵게 만들었습니다.</p>
+
+                    <pre><code>// 콜백 지옥의 예
+getData(function(a) {
+  getMoreData(a, function(b) {
+    getMoreData(b, function(c) {
+      getMoreData(c, function(d) {
+        getMoreData(d, function(e) {
+          // 계속...
+        });
+      });
+    });
+  });
+});</code></pre>
+
+                    <h2>Promise 기초</h2>
+                    <p>Promise는 비동기 작업의 최종 완료 또는 실패를 나타내는 객체입니다.</p>
+
+                    <pre><code>const promise = new Promise((resolve, reject) => {
+  // 비동기 작업
+  setTimeout(() => {
+    const success = true;
+    if (success) {
+      resolve('성공!');
+    } else {
+      reject('실패!');
+    }
+  }, 1000);
+});
+
+promise
+  .then(result => console.log(result))
+  .catch(error => console.error(error))
+  .finally(() => console.log('완료'));</code></pre>
+
+                    <h2>Promise 체이닝</h2>
+                    <pre><code>fetch('/api/user')
+  .then(response => response.json())
+  .then(user => fetch(`/api/posts/${user.id}`))
+  .then(response => response.json())
+  .then(posts => console.log(posts))
+  .catch(error => console.error('에러:', error));</code></pre>
+
+                    <h2>Promise.all과 Promise.race</h2>
+                    <pre><code>// 모든 Promise가 완료될 때까지 대기
+Promise.all([
+  fetch('/api/users'),
+  fetch('/api/posts'),
+  fetch('/api/comments')
+])
+  .then(([users, posts, comments]) => {
+    console.log('모든 데이터 로드 완료');
+  });
+
+// 가장 먼저 완료되는 Promise 사용
+Promise.race([
+  fetch('/api/server1'),
+  fetch('/api/server2'),
+  fetch('/api/server3')
+])
+  .then(response => {
+    console.log('첫 번째 응답:', response);
+  });</code></pre>
+
+                    <h2>Async/Await 기초</h2>
+                    <p>async/await는 Promise를 더 간결하고 동기적인 코드처럼 작성할 수 있게 해줍니다.</p>
+
+                    <pre><code>async function fetchUserData() {
+  try {
+    const response = await fetch('/api/user');
+    const user = await response.json();
+    
+    const postsResponse = await fetch(`/api/posts/${user.id}`);
+    const posts = await postsResponse.json();
+    
+    return { user, posts };
+  } catch (error) {
+    console.error('에러 발생:', error);
+    throw error;
+  }
+}</code></pre>
+
+                    <h2>병렬 처리 vs 순차 처리</h2>
+                    <pre><code>// 순차 처리 (느림)
+async function sequential() {
+  const user = await fetchUser();       // 1초
+  const posts = await fetchPosts();     // 1초
+  const comments = await fetchComments(); // 1초
+  // 총 3초
+}
+
+// 병렬 처리 (빠름)
+async function parallel() {
+  const [user, posts, comments] = await Promise.all([
+    fetchUser(),
+    fetchPosts(),
+    fetchComments()
+  ]);
+  // 총 1초 (가장 긴 작업 기준)
+}</code></pre>
+
+                    <h2>에러 처리 패턴</h2>
+                    <pre><code>// try-catch 패턴
+async function fetchData() {
+  try {
+    const data = await fetch('/api/data');
+    return await data.json();
+  } catch (error) {
+    console.error('에러:', error);
+    return null;
+  }
+}
+
+// Promise catch 패턴
+async function fetchData() {
+  const data = await fetch('/api/data').catch(error => {
+    console.error('Fetch 에러:', error);
+    return null;
+  });
+  
+  if (!data) return null;
+  
+  return await data.json().catch(error => {
+    console.error('JSON 파싱 에러:', error);
+    return null;
+  });
+}</code></pre>
+
+                    <h2>이벤트 루프 이해하기</h2>
+                    <pre><code>console.log('1');
+
+setTimeout(() => {
+  console.log('2');
+}, 0);
+
+Promise.resolve().then(() => {
+  console.log('3');
+});
+
+console.log('4');
+
+// 출력 순서: 1, 4, 3, 2
+// 이유: 마이크로태스크 큐(Promise)가 매크로태스크 큐(setTimeout)보다 우선순위가 높음</code></pre>
+
+                    <h2>실전 예제: API 재시도 로직</h2>
+                    <pre><code>async function fetchWithRetry(url, options = {}, retries = 3) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await fetch(url, options);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      if (i === retries - 1) throw error;
+      
+      // 지수 백오프
+      const delay = Math.pow(2, i) * 1000;
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+}</code></pre>
+
+                    <h2>결론</h2>
+                    <p>Promise와 async/await는 현대 JavaScript 비동기 프로그래밍의 핵심입니다. 이벤트 루프의 동작 원리를 이해하고, 적절한 에러 처리와 병렬 처리를 활용하면
+                        효율적이고 읽기 쉬운 비동기 코드를 작성할 수 있습니다.</p>
+                </div>
+
+                <div class="post-tags">
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">Promise</span>
+                    <span class="tag">Async/Await</span>
+                    <span class="tag">비동기</span>
+                </div>
+
+                <div class="post-share">
+                    <h3>이 글을 공유하세요</h3>
+                    <div class="share-buttons">
+                        <a href="#" class="share-btn">Twitter</a>
+                        <a href="#" class="share-btn">Facebook</a>
+                        <a href="#" class="share-btn">LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="related-posts">
+            <div class="container">
+                <h2>관련 글</h2>
+                <div class="related-posts-grid">
+                    <article class="post-card">
+                        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop"
+                            alt="React">
+                        <div class="post-card-content">
+                            <span class="post-category">Frontend</span>
+                            <h3><a href="react-performance-optimization.html">React 성능 최적화 팁</a></h3>
+                            <p class="post-excerpt">실제 프로젝트에서 React 애플리케이션의 성능을 개선하면서 배운 실용적인 최적화 기법들을 공유합니다.</p>
+                            <div class="post-meta">
+                                <span>📅 2025.12.20</span>
+                                <span>⏱ 8분</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="post-card">
+                        <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1200&auto=format&fit=crop"
+                            alt="Node.js">
+                        <div class="post-card-content">
+                            <span class="post-category">Backend</span>
+                            <h3><a href="nodejs-performance-monitoring.html">Node.js 성능 모니터링</a></h3>
+                            <p class="post-excerpt">프로덕션 환경에서 Node.js 애플리케이션의 성능을 모니터링하고 병목 지점을 찾아 개선하는 방법을 다룹니다.</p>
+                            <div class="post-meta">
+                                <span>📅 2025.12.10</span>
+                                <span>⏱ 9분</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="post-card">
+                        <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1200&auto=format&fit=crop"
+                            alt="TypeScript">
+                        <div class="post-card-content">
+                            <span class="post-category">Frontend</span>
+                            <h3><a href="typescript-generics-guide.html">TypeScript 제네릭 가이드</a></h3>
+                            <p class="post-excerpt">TypeScript의 제네릭을 활용하여 타입 안정성을 유지하면서도 재사용 가능한 컴포넌트를 만드는 방법을 알아봅니다.
+                            </p>
+                            <div class="post-meta">
+                                <span>📅 2025.12.18</span>
+                                <span>⏱ 6분</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>© <span id="year"></span> Hector. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#" aria-label="GitHub">GitHub</a>
+                <a href="#" aria-label="Twitter">Twitter</a>
+                <a href="#" aria-label="LinkedIn">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+</body>
+
+</html>

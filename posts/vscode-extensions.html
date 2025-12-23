@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>VS Code 생산성을 높이는 필수 익스텐션 | Hector의 블로그</title>
+    <meta name="description" content="개발 효율을 극대화할 수 있는 VS Code 익스텐션과 설정 팁을 소개합니다">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+    <header class="site-header" id="top">
+        <div class="container header-inner">
+            <a href="../index.html#top" class="logo" aria-label="홈으로 이동">Doit<span>.</span></a>
+            <nav class="nav" aria-label="주 메뉴">
+                <button class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="메뉴 열기">
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                </button>
+                <ul id="nav-list" class="nav-list">
+                    <li><a href="../index.html#home">Home</a></li>
+                    <li><a href="../index.html#categories">Categories</a></li>
+                    <li><a href="../index.html#about">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <article class="post-detail">
+        <div class="container">
+            <div class="post-detail-header">
+                <span class="post-category">Tools</span>
+                <h1>VS Code 생산성을 높이는 필수 익스텐션</h1>
+                <div class="post-meta">
+                    <span>📅 2025년 12월 8일</span>
+                    <span>⏱ 4분</span>
+                    <span>💬 10</span>
+                </div>
+            </div>
+
+            <div class="post-detail-image">
+                <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=1200&auto=format&fit=crop"
+                    alt="개발 도구">
+            </div>
+
+            <div class="post-detail-content">
+                <div class="post-body">
+                    <p class="lead">개발 효율을 극대화할 수 있는 VS Code 익스텐션과 설정 팁을 소개합니다. 실제 사용 경험을 바탕으로 정리했습니다.</p>
+
+                    <h2>1. ESLint - 코드 품질 관리</h2>
+                    <p>JavaScript와 TypeScript 코드의 품질을 자동으로 검사하고 문제를 표시해줍니다.</p>
+                    <pre><code>// .eslintrc.json 설정 예시
+{
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  "rules": {
+    "no-console": "warn",
+    "no-unused-vars": "error",
+    "@typescript-eslint/explicit-function-return-type": "off"
+  }
+}</code></pre>
+
+                    <h2>2. Prettier - 코드 포맷터</h2>
+                    <p>일관된 코드 스타일을 자동으로 유지해줍니다. 저장 시 자동 포맷 설정을 권장합니다.</p>
+                    <pre><code>// settings.json
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}</code></pre>
+
+                    <h2>3. GitLens - Git 기능 강화</h2>
+                    <p>코드의 작성자, 변경 이력을 한눈에 볼 수 있어 협업 시 매우 유용합니다.</p>
+                    <ul>
+                        <li>각 줄의 blame 정보 표시</li>
+                        <li>파일 히스토리 확인</li>
+                        <li>커밋 비교 및 검색</li>
+                        <li>리포지토리 시각화</li>
+                    </ul>
+
+                    <h2>4. Live Server - 실시간 미리보기</h2>
+                    <p>HTML/CSS/JavaScript 변경사항을 실시간으로 브라우저에 반영합니다.</p>
+                    <pre><code>// settings.json
+{
+  "liveServer.settings.donotShowInfoMsg": true,
+  "liveServer.settings.port": 5500,
+  "liveServer.settings.CustomBrowser": "chrome"
+}</code></pre>
+
+                    <h2>5. Auto Rename Tag - 태그 자동 수정</h2>
+                    <p>HTML/JSX에서 여는 태그를 수정하면 닫는 태그도 자동으로 수정됩니다.</p>
+                    <pre><code>&lt;!-- div를 section으로 변경하면 닫는 태그도 자동 변경 --&gt;
+&lt;section&gt;
+  &lt;h1&gt;제목&lt;/h1&gt;
+&lt;/section&gt;</code></pre>
+
+                    <h2>6. Path Intellisense - 경로 자동완성</h2>
+                    <p>파일 경로를 입력할 때 자동 완성을 제공합니다.</p>
+                    <pre><code>import Component from './components/Component'; // 자동완성
+&lt;img src="./images/logo.png" /&gt; // 자동완성</code></pre>
+
+                    <h2>7. Better Comments - 주석 강조</h2>
+                    <p>주석을 카테고리별로 색상 구분하여 가독성을 높입니다.</p>
+                    <pre><code>// ! 중요한 주석 (빨간색)
+// ? 질문이나 의문 (파란색)
+// TODO: 할 일 (주황색)
+// * 강조 주석 (초록색)</code></pre>
+
+                    <h2>8. Error Lens - 에러 인라인 표시</h2>
+                    <p>에러와 경고를 코드 라인에 직접 표시하여 빠르게 문제를 파악할 수 있습니다.</p>
+
+                    <h2>9. Bracket Pair Colorizer 2 - 괄호 색상 구분</h2>
+                    <p>중첩된 괄호를 색상으로 구분하여 코드 블록을 쉽게 식별할 수 있습니다.</p>
+                    <pre><code>// VS Code 1.60 이상에서는 기본 기능으로 제공
+{
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active"
+}</code></pre>
+
+                    <h2>10. Thunder Client - API 테스팅</h2>
+                    <p>VS Code 내에서 바로 REST API를 테스트할 수 있습니다. Postman의 경량 대안입니다.</p>
+
+                    <h2>추가 생산성 설정</h2>
+                    <pre><code>// settings.json - 유용한 설정들
+{
+  // 자동 저장
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  
+  // 미니맵 표시
+  "editor.minimap.enabled": true,
+  
+  // 탭 크기
+  "editor.tabSize": 2,
+  
+  // 후행 공백 제거
+  "files.trimTrailingWhitespace": true,
+  
+  // 파일 끝 개행 추가
+  "files.insertFinalNewline": true,
+  
+  // 폰트
+  "editor.fontFamily": "Fira Code, Monaco, 'Courier New', monospace",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 14,
+  
+  // Emmet
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  }
+}</code></pre>
+
+                    <h2>유용한 단축키</h2>
+                    <pre><code>// macOS 기준
+Cmd + P          // 파일 빠른 열기
+Cmd + Shift + P  // 명령 팔레트
+Cmd + D          // 다음 일치 항목 선택 (다중 커서)
+Cmd + /          // 주석 토글
+Cmd + Shift + F  // 전체 검색
+Cmd + B          // 사이드바 토글
+Option + Up/Down // 줄 이동
+Option + Shift + Up/Down // 줄 복사</code></pre>
+
+                    <h2>결론</h2>
+                    <p>올바른 익스텐션과 설정을 사용하면 개발 생산성이 크게 향상됩니다. 하지만 너무 많은 익스텐션은 오히려 VS Code를 느리게 만들 수 있으니, 정말 필요한 것만 설치하는 것을
+                        권장합니다.</p>
+                </div>
+
+                <div class="post-tags">
+                    <span class="tag">VS Code</span>
+                    <span class="tag">생산성</span>
+                    <span class="tag">도구</span>
+                    <span class="tag">익스텐션</span>
+                </div>
+
+                <div class="post-share">
+                    <h3>이 글을 공유하세요</h3>
+                    <div class="share-buttons">
+                        <a href="#" class="share-btn">Twitter</a>
+                        <a href="#" class="share-btn">Facebook</a>
+                        <a href="#" class="share-btn">LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="related-posts">
+            <div class="container">
+                <h2>관련 글</h2>
+                <div class="related-posts-grid">
+                    <article class="post-card">
+                        <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1200&auto=format&fit=crop"
+                            alt="디자인">
+                        <div class="post-card-content">
+                            <span class="post-category">Design</span>
+                            <h3><a href="ui-ux-design-basics.html">개발자를 위한 UI/UX 디자인 기초</a></h3>
+                            <p class="post-excerpt">디자이너가 아니어도 알아야 할 기본적인 디자인 원칙과 사용자 경험을 개선하는 팁들을 공유합니다.</p>
+                            <div class="post-meta">
+                                <span>📅 2025.12.05</span>
+                                <span>⏱ 6분</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="post-card">
+                        <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1200&auto=format&fit=crop"
+                            alt="TypeScript">
+                        <div class="post-card-content">
+                            <span class="post-category">Frontend</span>
+                            <h3><a href="typescript-generics-guide.html">TypeScript 제네릭 가이드</a></h3>
+                            <p class="post-excerpt">TypeScript의 제네릭을 활용하여 타입 안정성을 유지하면서도 재사용 가능한 컴포넌트를 만드는 방법을 알아봅니다.
+                            </p>
+                            <div class="post-meta">
+                                <span>📅 2025.12.18</span>
+                                <span>⏱ 6분</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="post-card">
+                        <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1200&auto=format&fit=crop"
+                            alt="Node.js">
+                        <div class="post-card-content">
+                            <span class="post-category">Backend</span>
+                            <h3><a href="nodejs-performance-monitoring.html">Node.js 성능 모니터링</a></h3>
+                            <p class="post-excerpt">프로덕션 환경에서 Node.js 애플리케이션의 성능을 모니터링하고 병목 지점을 찾아 개선하는 방법을 다룹니다.</p>
+                            <div class="post-meta">
+                                <span>📅 2025.12.10</span>
+                                <span>⏱ 9분</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>© <span id="year"></span> Hector. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#" aria-label="GitHub">GitHub</a>
+                <a href="#" aria-label="Twitter">Twitter</a>
+                <a href="#" aria-label="LinkedIn">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+</body>
+
+</html>

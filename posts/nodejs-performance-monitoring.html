@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Node.js 성능 모니터링과 최적화 | Hector의 블로그</title>
+    <meta name="description" content="프로덕션 환경에서 Node.js 애플리케이션의 성능을 모니터링하고 병목 지점을 찾아 개선하는 방법">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+    <header class="site-header" id="top">
+        <div class="container header-inner">
+            <a href="../index.html#top" class="logo" aria-label="홈으로 이동">Doit<span>.</span></a>
+            <nav class="nav" aria-label="주 메뉴">
+                <button class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="메뉴 열기">
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                </button>
+                <ul id="nav-list" class="nav-list">
+                    <li><a href="../index.html#home">Home</a></li>
+                    <li><a href="../index.html#categories">Categories</a></li>
+                    <li><a href="../index.html#about">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <article class="post-detail">
+        <div class="container">
+            <div class="post-detail-header">
+                <span class="post-category">Backend</span>
+                <h1>Node.js 성능 모니터링과 최적화</h1>
+                <div class="post-meta">
+                    <span>📅 2025년 12월 10일</span>
+                    <span>⏱ 9분</span>
+                    <span>💬 20</span>
+                </div>
+            </div>
+
+            <div class="post-detail-image">
+                <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1200&auto=format&fit=crop"
+                    alt="서버 코드">
+            </div>
+
+            <div class="post-detail-content">
+                <div class="post-body">
+                    <p class="lead">프로덕션 환경에서 Node.js 애플리케이션의 성능을 모니터링하고 병목 지점을 찾아 개선하는 방법을 다룹니다.</p>
+
+                    <h2>성능 모니터링의 중요성</h2>
+                    <p>Node.js 애플리케이션의 성능 문제는 사용자 경험과 서버 비용에 직접적인 영향을 미칩니다. 지속적인 모니터링과 최적화가 필수적입니다.</p>
+
+                    <h2>핵심 성능 지표 (Metrics)</h2>
+                    <pre><code>// 기본 성능 측정
+const startTime = process.hrtime();
+
+// 작업 수행
+await someOperation();
+
+const [seconds, nanoseconds] = process.hrtime(startTime);
+const duration = seconds * 1000 + nanoseconds / 1000000;
+console.log(`실행 시간: ${duration}ms`);</code></pre>
+
+                    <h2>메모리 사용량 모니터링</h2>
+                    <pre><code>// 메모리 사용량 확인
+const used = process.memoryUsage();
+console.log({
+  rss: `${Math.round(used.rss / 1024 / 1024)}MB`, // 전체 메모리
+  heapTotal: `${Math.round(used.heapTotal / 1024 / 1024)}MB`,
+  heapUsed: `${Math.round(used.heapUsed / 1024 / 1024)}MB`,
+  external: `${Math.round(used.external / 1024 / 1024)}MB`
+});
+
+// 정기적인 모니터링
+setInterval(() => {
+  const usage = process.memoryUsage();
+  if (usage.heapUsed / usage.heapTotal > 0.9) {
+    console.warn('메모리 사용량이 90%를 초과했습니다!');
+  }
+}, 30000);</code></pre>
+
+                    <h2>이벤트 루프 모니터링</h2>
+                    <pre><code>const perf_hooks = require('perf_hooks');
+
+const obs = new perf_hooks.PerformanceObserver((items) => {
+  items.getEntries().forEach((entry) => {
+    console.log(`${entry.name}: ${entry.duration}ms`);
+  });
+});
+
+obs.observe({ entryTypes: ['measure'] });
+
+// 측정
+perf_hooks.performance.mark('start-operation');
+await someOperation();
+perf_hooks.performance.mark('end-operation');
+perf_hooks.performance.measure('operation', 'start-operation', 'end-operation');</code></pre>
+
+                    <h2>프로파일링 도구</h2>
+                    <pre><code>// V8 프로파일러 사용
+node --prof app.js
+
+// 프로파일 분석
+node --prof-process isolate-0x*.log > processed.txt
+
+// Clinic.js 사용
+npm install -g clinic
+clinic doctor -- node app.js
+clinic flame -- node app.js
+clinic bubbleprof -- node app.js</code></pre>
+
+                    <h2>데이터베이스 쿼리 최적화</h2>
+                    <pre><code>// 나쁜 예: N+1 쿼리 문제
+const users = await User.findAll();
+for (const user of users) {
+  const posts = await Post.findAll({ where: { userId: user.id } });
+  user.posts = posts;
+}
+
+// 좋은 예: Join 또는 Include 사용
+const users = await User.findAll({
+  include: [{ model: Post }]
+});
+
+// 인덱스 추가
+await queryInterface.addIndex('users', ['email']);
+await queryInterface.addIndex('posts', ['userId', 'createdAt']);</code></pre>
+
+                    <h2>캐싱 전략</h2>
+                    <pre><code>const NodeCache = require('node-cache');
+const cache = new NodeCache({ stdTTL: 600 }); // 10분
+
+async function getUserData(userId) {
+  // 캐시 확인
+  const cached = cache.get(`user:${userId}`);
+  if (cached) return cached;
+  
+  // DB에서 조회
+  const user = await User.findByPk(userId);
+  
+  // 캐시에 저장
+  cache.set(`user:${userId}`, user);
+  return user;
+}
+
+// Redis 사용
+const redis = require('redis');
+const client = redis.createClient();
+
+async function getCachedData(key) {
+  const cached = await client.get(key);
+  if (cached) return JSON.parse(cached);
+  
+  const data = await fetchDataFromDB(key);
+  await client.setEx(key, 3600, JSON.stringify(data));
+  return data;
+}</code></pre>
+
+                    <h2>스트리밍과 버퍼 최적화</h2>
+                    <pre><code>// 나쁜 예: 전체 파일을 메모리에 로드
+const data = await fs.readFile('large-file.txt');
+res.send(data);
+
+// 좋은 예: 스트리밍 사용
+const stream = fs.createReadStream('large-file.txt');
+stream.pipe(res);
+
+// Transform stream 사용
+const { Transform } = require('stream');
+const upperCaseTransform = new Transform({
+  transform(chunk, encoding, callback) {
+    this.push(chunk.toString().toUpperCase());
+    callback();
+  }
+});
+
+fs.createReadStream('input.txt')
+  .pipe(upperCaseTransform)
+  .pipe(fs.createWriteStream('output.txt'));</code></pre>
+
+                    <h2>클러스터링</h2>
+                    <pre><code>const cluster = require('cluster');
+const os = require('os');
+const numCPUs = os.cpus().length;
+
+if (cluster.isMaster) {
+  console.log(`마스터 프로세스 ${process.pid} 실행 중`);
+  
+  // 워커 생성
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+  
+  cluster.on('exit', (worker) => {
+    console.log(`워커 ${worker.process.pid} 종료`);
+    cluster.fork(); // 새 워커 생성
+  });
+} else {
+  // 워커 프로세스
+  require('./app.js');
+  console.log(`워커 ${process.pid} 시작됨`);
+}</code></pre>
+
+                    <h2>비동기 작업 최적화</h2>
+                    <pre><code>// 나쁜 예: 순차 처리
+for (const item of items) {
+  await processItem(item);
+}
+
+// 좋은 예: 병렬 처리
+await Promise.all(items.map(item => processItem(item)));
+
+// 더 나은 예: 동시 실행 수 제한
+const pLimit = require('p-limit');
+const limit = pLimit(5); // 최대 5개 동시 실행
+
+await Promise.all(
+  items.map(item => limit(() => processItem(item)))
+);</code></pre>
+
+                    <h2>모니터링 도구 통합</h2>
+                    <pre><code>// Prometheus + Grafana
+const promClient = require('prom-client');
+const collectDefaultMetrics = promClient.collectDefaultMetrics;
+collectDefaultMetrics({ timeout: 5000 });
+
+const httpRequestDuration = new promClient.Histogram({
+  name: 'http_request_duration_seconds',
+  help: 'Duration of HTTP requests in seconds',
+  labelNames: ['method', 'route', 'status_code']
+});
+
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = (Date.now() - start) / 1000;
+    httpRequestDuration
+      .labels(req.method, req.route?.path || req.path, res.statusCode)
+      .observe(duration);
+  });
+  next();
+});</code></pre>
+
+                    <h2>결론</h2>
+                    <p>Node.js 성능 최적화는 지속적인 과정입니다. 정기적인 모니터링, 프로파일링, 그리고 적절한 최적화 기법 적용을 통해 안정적이고 빠른 애플리케이션을 유지할 수 있습니다.
+                        항상 측정 후 최적화하는 것을 잊지 마세요!</p>
+                </div>
+
+                <div class="post-tags">
+                    <span class="tag">Node.js</span>
+                    <span class="tag">성능최적화</span>
+                    <span class="tag">Backend</span>
+                    <span class="tag">모니터링</span>
+                </div>
+
+                <div class="post-share">
+                    <h3>이 글을 공유하세요</h3>
+                    <div class="share-buttons">
+                        <a href="#" class="share-btn">Twitter</a>
+                        <a href="#" class="share-btn">Facebook</a>
+                        <a href="#" class="share-btn">LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="related-posts">
+            <div class="container">
+                <h2>관련 글</h2>
+                <div class="related-posts-grid">
+                    <article class="post-card">
+                        <img src="https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?q=80&w=1200&auto=format&fit=crop"
+                            alt="JavaScript">
+                        <div class="post-card-content">
+                            <span class="post-category">JavaScript</span>
+                            <h3><a href="promise-async-await.html">Promise와 Async/Await 깊이 이해하기</a></h3>
+                            <p class="post-excerpt">비동기 프로그래밍의 핵심 개념인 Promise와 async/await의 동작 원리를 알아봅니다.</p>
+                            <div class="post-meta">
+                                <span>📅 2025.12.12</span>
+                                <span>⏱ 7분</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="post-card">
+                        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop"
+                            alt="React">
+                        <div class="post-card-content">
+                            <span class="post-category">Frontend</span>
+                            <h3><a href="react-performance-optimization.html">React 성능 최적화 팁</a></h3>
+                            <p class="post-excerpt">실제 프로젝트에서 React 애플리케이션의 성능을 개선하면서 배운 실용적인 최적화 기법들을 공유합니다.</p>
+                            <div class="post-meta">
+                                <span>📅 2025.12.20</span>
+                                <span>⏱ 8분</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="post-card">
+                        <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=1200&auto=format&fit=crop"
+                            alt="개발 도구">
+                        <div class="post-card-content">
+                            <span class="post-category">Tools</span>
+                            <h3><a href="vscode-extensions.html">VS Code 필수 익스텐션</a></h3>
+                            <p class="post-excerpt">개발 효율을 극대화할 수 있는 VS Code 익스텐션과 설정 팁을 소개합니다.</p>
+                            <div class="post-meta">
+                                <span>📅 2025.12.08</span>
+                                <span>⏱ 4분</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>© <span id="year"></span> Hector. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#" aria-label="GitHub">GitHub</a>
+                <a href="#" aria-label="Twitter">Twitter</a>
+                <a href="#" aria-label="LinkedIn">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+</body>
+
+</html>

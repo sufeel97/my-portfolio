@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CSS Grid로 반응형 레이아웃 마스터하기 | Hector의 블로그</title>
+    <meta name="description" content="복잡한 레이아웃도 간단하게 만들 수 있는 CSS Grid의 강력한 기능들을 실전 예제와 함께 살펴봅니다">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+    <header class="site-header" id="top">
+        <div class="container header-inner">
+            <a href="../index.html#top" class="logo" aria-label="홈으로 이동">Doit<span>.</span></a>
+            <nav class="nav" aria-label="주 메뉴">
+                <button class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="메뉴 열기">
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                </button>
+                <ul id="nav-list" class="nav-list">
+                    <li><a href="../index.html#home">Home</a></li>
+                    <li><a href="../index.html#categories">Categories</a></li>
+                    <li><a href="../index.html#about">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <article class="post-detail">
+        <div class="container">
+            <div class="post-detail-header">
+                <span class="post-category">CSS</span>
+                <h1>CSS Grid로 반응형 레이아웃 마스터하기</h1>
+                <div class="post-meta">
+                    <span>📅 2025년 12월 15일</span>
+                    <span>⏱ 5분</span>
+                    <span>💬 12</span>
+                </div>
+            </div>
+
+            <div class="post-detail-image">
+                <img src="https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?q=80&w=1200&auto=format&fit=crop"
+                    alt="CSS 디자인">
+            </div>
+
+            <div class="post-detail-content">
+                <div class="post-body">
+                    <p class="lead">복잡한 레이아웃도 간단하게 만들 수 있는 CSS Grid의 강력한 기능들을 실전 예제와 함께 살펴봅니다.</p>
+
+                    <h2>CSS Grid란?</h2>
+                    <p>CSS Grid는 2차원 레이아웃 시스템으로, 행과 열을 동시에 다룰 수 있어 복잡한 웹 레이아웃을 쉽게 구현할 수 있습니다.</p>
+
+                    <h2>기본 Grid 설정</h2>
+                    <pre><code>.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 20px;
+}
+
+/* 또는 */
+.container {
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  gap: 20px;
+}</code></pre>
+
+                    <h2>Grid 템플릿 영역</h2>
+                    <p>grid-template-areas를 사용하면 레이아웃을 시각적으로 정의할 수 있습니다.</p>
+
+                    <pre><code>.container {
+  display: grid;
+  grid-template-areas:
+    "header header header"
+    "sidebar main aside"
+    "footer footer footer";
+  grid-template-columns: 200px 1fr 200px;
+  grid-template-rows: auto 1fr auto;
+  gap: 20px;
+}
+
+.header { grid-area: header; }
+.sidebar { grid-area: sidebar; }
+.main { grid-area: main; }
+.aside { grid-area: aside; }
+.footer { grid-area: footer; }</code></pre>
+
+                    <h2>자동 배치와 자동 크기 조정</h2>
+                    <pre><code>/* 자동으로 열 개수 조정 */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* auto-fill vs auto-fit */
+grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));</code></pre>
+
+                    <h2>Grid 아이템 배치</h2>
+                    <pre><code>.item {
+  /* 시작과 끝 위치 지정 */
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  
+  /* 또는 span 사용 */
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+/* 이름 지정된 라인 사용 */
+.container {
+  grid-template-columns: [start] 1fr [middle] 1fr [end];
+}
+
+.item {
+  grid-column: start / middle;
+}</code></pre>
+
+                    <h2>반응형 Grid 레이아웃</h2>
+                    <pre><code>.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}</code></pre>
+
+                    <h2>Grid와 Flexbox 조합</h2>
+                    <pre><code>/* Grid로 전체 레이아웃 */
+.page {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 20px;
+}
+
+/* Flexbox로 내부 정렬 */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}</code></pre>
+
+                    <h2>실전 예제: 카드 그리드</h2>
+                    <pre><code>.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 4px;
+}</code></pre>
+
+                    <h2>복잡한 레이아웃 예제</h2>
+                    <pre><code>.magazine-layout {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-rows: 200px;
+  gap: 10px;
+}
+
+.feature {
+  grid-column: span 3;
+  grid-row: span 2;
+}
+
+.small {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+.tall {
+  grid-column: span 2;
+  grid-row: span 2;
+}</code></pre>
+
+                    <h2>정렬과 배치</h2>
+                    <pre><code>/* 컨테이너 내에서 그리드 정렬 */
+.container {
+  justify-items: center; /* 가로 정렬 */
+  align-items: center;   /* 세로 정렬 */
+  
+  /* 또는 한 번에 */
+  place-items: center;
+}
+
+/* 개별 아이템 정렬 */
+.item {
+  justify-self: start;
+  align-self: end;
+  
+  /* 또는 */
+  place-self: start end;
+}</code></pre>
+
+                    <h2>결론</h2>
+                    <p>CSS Grid는 현대 웹 레이아웃의 필수 도구입니다. Flexbox와 함께 사용하면 거의 모든 레이아웃을 간단하고 효율적으로 구현할 수 있습니다. 브라우저 지원도 매우 좋아
+                        실무에서 안심하고 사용할 수 있습니다.</p>
+                </div>
+
+                <div class="post-tags">
+                    <span class="tag">CSS</span>
+                    <span class="tag">Grid</span>
+                    <span class="tag">반응형</span>
+                    <span class="tag">레이아웃</span>
+                </div>
+
+                <div class="post-share">
+                    <h3>이 글을 공유하세요</h3>
+                    <div class="share-buttons">
+                        <a href="#" class="share-btn">Twitter</a>
+                        <a href="#" class="share-btn">Facebook</a>
+                        <a href="#" class="share-btn">LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="related-posts">
+            <div class="container">
+                <h2>관련 글</h2>
+                <div class="related-posts-grid">
+                    <article class="post-card">
+                        <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1200&auto=format&fit=crop"
+                            alt="디자인">
+                        <div class="post-card-content">
+                            <span class="post-category">Design</span>
+                            <h3><a href="ui-ux-design-basics.html">개발자를 위한 UI/UX 디자인 기초</a></h3>
+                            <p class="post-excerpt">디자이너가 아니어도 알아야 할 기본적인 디자인 원칙과 사용자 경험을 개선하는 팁들을 공유합니다.</p>
+                            <div class="post-meta">
+                                <span>📅 2025.12.05</span>
+                                <span>⏱ 6분</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="post-card">
+                        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop"
+                            alt="웹 개발">
+                        <div class="post-card-content">
+                            <span class="post-category">Frontend</span>
+                            <h3><a href="react-performance-optimization.html">React 성능 최적화 팁</a></h3>
+                            <p class="post-excerpt">실제 프로젝트에서 React 애플리케이션의 성능을 개선하면서 배운 실용적인 최적화 기법들을 공유합니다.</p>
+                            <div class="post-meta">
+                                <span>📅 2025.12.20</span>
+                                <span>⏱ 8분</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="post-card">
+                        <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1200&auto=format&fit=crop"
+                            alt="TypeScript">
+                        <div class="post-card-content">
+                            <span class="post-category">Frontend</span>
+                            <h3><a href="typescript-generics-guide.html">TypeScript 제네릭 가이드</a></h3>
+                            <p class="post-excerpt">TypeScript의 제네릭을 활용하여 타입 안정성을 유지하면서도 재사용 가능한 컴포넌트를 만드는 방법을 알아봅니다.
+                            </p>
+                            <div class="post-meta">
+                                <span>📅 2025.12.18</span>
+                                <span>⏱ 6분</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>© <span id="year"></span> Hector. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#" aria-label="GitHub">GitHub</a>
+                <a href="#" aria-label="Twitter">Twitter</a>
+                <a href="#" aria-label="LinkedIn">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+</body>
+
+</html>
